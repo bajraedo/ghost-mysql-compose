@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  db:
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_DATABASE: ghost
+      MYSQL_USER: ghost
+      MYSQL_PASSWORD: ghostpass
+      MYSQL_ROOT_PASSWORD: rootpass
+    volumes:
+      - ghost-db-data:/var/lib/mysql
+
+  ghost:
+    image: ghost:5-alpine
+    restart: always
+    ports:
+      - "8082:2368"
+    environment:
+      database__client: mysql
+      database__connection__host: db
+      database__connection__user: ghost
+      database__connection__password: ghostpass
+      database__connection__database: ghost
+    depends_on:
+      - db
+
+volumes:
+  ghost-db-data: {}
